@@ -18,6 +18,9 @@ exchange.file <- paste0("../../outputs/2017/monthly/forcings/netflux_HD_1/goa_hy
 bgm.file <- "../../data/atlantis/GOA_WGS84_V4_final.bgm" 
 cum.depth <- c(1,30,100,200,500,1000,3969)
 
+# make directory for plots
+dir.create('flux_plots')
+
 # Atlantis model spatial domain
 atlantis_bgm <- bgm.file %>% read_bgm()
 atlantis_box <- atlantis_bgm %>% 
@@ -47,7 +50,7 @@ dat <- dat %>%
 # here 0 is the bottom
 
 # Loop for all boxes ------------------------------------------------------
-all_boxes <- atlantis_box %>% filter(box_id > 80) %>% pull(box_id) 
+all_boxes <- atlantis_box %>% pull(box_id) 
 
 make_fluxplot <- function(source_b){
   
@@ -138,6 +141,3 @@ make_fluxplot <- function(source_b){
 }
 
 purrr::map(all_boxes, possibly(make_fluxplot,NA))
-
-
-  
