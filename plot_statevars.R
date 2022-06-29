@@ -14,13 +14,13 @@ lapply(.packages, require, character.only=TRUE)
 
 select <- dplyr::select
 
-temp.file <- paste0("../../outputs/2017/monthly/forcings/temp/goa_roms_temp_2017.nc")
-salt.file <- paste0("../../outputs/2017/monthly/forcings/salt/goa_roms_salt_2017.nc")
+temp.file <- paste0("../../outputs/complete_from_Emily/Script1/all/temp/goa_roms_temp_1995-2004.nc")
+salt.file <- paste0("../../outputs/complete_from_Emily/Script1/all/salt/goa_roms_salt_1995-2004.nc")
 bgm.file <- "../../data/atlantis/GOA_WGS84_V4_final.bgm" 
 cum.depth <- c(1,30,100,200,500,1000,3969)
 
 # make directory for plots
-dir.create('statevar_plots')
+dir.create('statevar_plots_1995-2004')
 
 # Atlantis model spatial domain
 atlantis_bgm <- bgm.file %>% read_bgm()
@@ -68,12 +68,15 @@ make_statevar_plot <- function(focal_box){
     group_by(t,b) %>%
     mutate(z_flip = max(z)-z) %>%
     ungroup() %>%
-    mutate(t = as.POSIXct(t, origin = '2017-01-01', tz = 'UTC')) %>%
+    mutate(t = as.POSIXct(t, origin = '1995-01-01', tz = 'UTC')) %>%
     ggplot(aes(x = t, y = value, color = factor(z_flip)))+
     geom_line(size = 1.5)+
+    scale_color_brewer(palette = 'Dark2')+
     theme_bw()+
-    labs(x = 'Time', y = 'PPT', title = paste('State variables in box', focal_box, '(0 is the surface)'), color = 'Layer')+
-    facet_wrap(~name, scales = 'free')
+    labs(x = '', title = paste('State variables in box', focal_box, '(0 is the surface)'), color = 'Layer')+
+    facet_wrap(~name, scales = 'free', 
+               labeller = as_labeller( c(temperature = 'Temperature (C)', salinity = 'Salinity (PPT)') ))+
+    theme(strip.placement = "outside")
   
   this_bbox <- st_bbox(atlantis_box %>% filter(box_id == focal_box))
   # add a small buffer around it?
@@ -106,8 +109,8 @@ make_statevar_plot <- function(focal_box){
   
   # Produce a graphic output ------------------------------------------------
   
-  p3 <- plot_grid(p2, p1, ncol = 1, nrow = 2, rel_heights = c(1, 0.8))
-  save_plot(paste0('statevar_plots/focal_box_', focal_box, '.png'), p3, base_height = 12, base_width = 12)
+  p3 <- plot_grid(p2, p1, ncol = 1, nrow = 2, rel_heights = c(0.8, 1))
+  save_plot(paste0('statevar_plots_1995-2004/focal_box_', focal_box, '.png'), p3, base_height = 12, base_width = 18)
   
 }
 
