@@ -14,12 +14,12 @@ lapply(.packages, require, character.only=TRUE)
 
 select <- dplyr::select
 
-exchange.file <- paste0("../../outputs/2017/monthly/forcings/netflux_HD_1/goa_hydro_2017.nc")
+exchange.file <- paste0("../../outputs/complete_from_Emily/Script1/all/hydro/goa_hydro_1995-2004.nc")
 bgm.file <- "../../data/atlantis/GOA_WGS84_V4_final.bgm" 
 cum.depth <- c(1,30,100,200,500,1000,3969)
 
 # make directory for plots
-dir.create('flux_plots')
+dir.create('flux_plots_1995-2004')
 
 # Atlantis model spatial domain
 atlantis_bgm <- bgm.file %>% read_bgm()
@@ -85,7 +85,7 @@ make_fluxplot <- function(source_b){
   # Plot exchanges ----------------------------------------------------------
   p1 <- dat3 %>%
     mutate(dest = paste0(dest_b, ':', dest_k_flip),
-           t = as.POSIXct(t, origin = '2017-01-01', tz = 'UTC')) %>%
+           t = as.POSIXct(t, origin = '1995-01-01', tz = 'UTC')) %>%
     rowwise() %>%
     mutate(sign = ifelse(exchange > 0, 'Outgoing from focal', 'Incoming into focal')) %>%
     ungroup() %>% 
@@ -136,7 +136,7 @@ make_fluxplot <- function(source_b){
   # Produce a graphic output ------------------------------------------------
   
   p3 <- plot_grid(p2, p1, ncol = 1, nrow = 2, rel_heights = c(0.3,1))
-  save_plot(paste0('flux_plots/focal_box_', source_b, '.png'), p3, base_height = 20, base_width = 12)
+  save_plot(paste0('flux_plots_1995-2004/focal_box_', source_b, '.png'), p3, base_height = 20, base_width = 12)
   
 }
 
