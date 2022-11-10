@@ -1,4 +1,4 @@
-# Tootls to check hydro.nc files for Atlantis GOA
+# Tools to check hydro.nc files for Atlantis GOA
 
 This code helps check the sanity of the hydrodynamic forcing files for Atlantis GOA. Files are created from ROMS output with code hosted [here](https://github.com/owenrliu/ROMS_Atlantis_translation/tree/GOA).
 
