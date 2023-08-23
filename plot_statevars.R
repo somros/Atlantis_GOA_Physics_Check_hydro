@@ -14,13 +14,13 @@ lapply(.packages, require, character.only=TRUE)
 
 select <- dplyr::select
 
-temp.file <- paste0("../../outputs/complete_from_Emily/Script1/all/temp/goa_roms_temp_1995-2004.nc")
-salt.file <- paste0("../../outputs/complete_from_Emily/Script1/all/salt/goa_roms_salt_1995-2004.nc")
+temp.file <- paste0("../../outputs/complete_from_Emily/Script1/2017/monthly/forcings/temp/goa_temp_2017.nc")
+salt.file <- paste0("../../outputs/complete_from_Emily/Script1/2017/monthly/forcings/salt/goa_salt_2017.nc")
 bgm.file <- "../../data/atlantis/GOA_WGS84_V4_final.bgm" 
 cum.depth <- c(1,30,100,200,500,1000,3969)
 
 # make directory for plots
-dir.create('statevar_plots_1995-2004')
+dir.create('statevar_plots')
 
 # Atlantis model spatial domain
 atlantis_bgm <- bgm.file %>% read_bgm()
@@ -57,6 +57,15 @@ dat <- dat_temp %>%
 
 # here 0 is the bottom
 
+# plot summary across model domain 
+# dat %>%
+#   left_join(atlantis_box %>% st_set_geometry(NULL) %>% select(box_id, boundary), by = c('b'='box_id')) %>%
+#   filter(name == 'temperature', z == 0, boundary == FALSE) %>%
+#   group_by(t) %>%
+#   summarize(mean_val = mean(value)) %>%
+#   mutate(year = 2017) %>%
+#   write.csv('temp2017.csv', row.names = F)
+
 # Loop for all boxes ------------------------------------------------------
 all_boxes <- atlantis_box %>% pull(box_id) 
 
@@ -68,7 +77,7 @@ make_statevar_plot <- function(focal_box){
     group_by(t,b) %>%
     mutate(z_flip = max(z)-z) %>%
     ungroup() %>%
-    mutate(t = as.POSIXct(t, origin = '1995-01-01', tz = 'UTC')) %>%
+    mutate(t = as.POSIXct(t, origin = '2017-01-01', tz = 'UTC')) %>%
     ggplot(aes(x = t, y = value, color = factor(z_flip)))+
     geom_line(size = 1.5)+
     scale_color_brewer(palette = 'Dark2')+
@@ -110,7 +119,7 @@ make_statevar_plot <- function(focal_box){
   # Produce a graphic output ------------------------------------------------
   
   p3 <- plot_grid(p2, p1, ncol = 1, nrow = 2, rel_heights = c(0.8, 1))
-  save_plot(paste0('statevar_plots_1995-2004/focal_box_', focal_box, '.png'), p3, base_height = 12, base_width = 18)
+  save_plot(paste0('statevar_plots/focal_box_', focal_box, '.png'), p3, base_height = 12, base_width = 18)
   
 }
 

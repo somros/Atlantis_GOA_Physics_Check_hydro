@@ -24,9 +24,13 @@ select <- dplyr::select
 
 this_year <- 2017
 
-salinity.file    <- paste0("../../outputs/complete_from_Emily/Script1/",this_year,"/monthly/forcings/salt/goa_salt_",this_year,".nc")      
-temperature.file <- paste0("../../outputs/complete_from_Emily/Script1/",this_year,"/monthly/forcings/temp/goa_temp_",this_year,".nc")
-exchange.file <- paste0("../../outputs/complete_from_Emily/Script1/",this_year,"/monthly/forcings/hydro/goa_hydro_",this_year,".nc")
+# salinity.file    <- paste0("../../outputs/complete_from_Emily/Script1/",this_year,"/monthly/forcings/salt/goa_salt_",this_year,".nc")      
+# temperature.file <- paste0("../../outputs/complete_from_Emily/Script1/",this_year,"/monthly/forcings/temp/goa_temp_",this_year,".nc")
+# exchange.file <- paste0("../../outputs/complete_from_Emily/Script1/",this_year,"/monthly/forcings/hydro/goa_hydro_",this_year,".nc")
+salinity.file    <- 'check_08232023/goa_roms_salt_1999.nc'      
+temperature.file <- 'check_08232023/goa_roms_temp_1999.nc'
+exchange.file <- 'check_08232023/goa_hydro_1999.nc'
+
 bgm.file         <- "../../data/atlantis/GOA_WGS84_V4_final.bgm" 
 #cum.depth <- c(0,30,70,100,300,500,2969)  # cumulative water layer depths
 cum.depth <- c(0,30,100,200,500,1000,3969)
