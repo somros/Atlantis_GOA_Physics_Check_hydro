@@ -14,12 +14,13 @@ lapply(.packages, require, character.only=TRUE)
 
 select <- dplyr::select
 
-exchange.file <- paste0("../../outputs/complete_from_Emily/Script1/2017/monthly/forcings/hydro_hdNov2022/goa_hydro_2017.nc")
+exchange.file <- paste0("../../../Atlantis_GOA_OY_MS/forcings/hydro/hydro/goa_hydro_2075.nc")
 bgm.file <- "../../data/atlantis/GOA_WGS84_V4_final.bgm" 
 cum.depth <- c(1,30,100,200,500,1000,3969)
 
 # make directory for plots
-dir.create('flux_plots_2017_HD_by_length')
+outdir <- 'flux_plots_2075_climatology/'
+dir.create(outdir)
 
 # Atlantis model spatial domain
 atlantis_bgm <- bgm.file %>% read_bgm()
@@ -78,7 +79,7 @@ make_fluxplot <- function(source_b){
   # flip layers so that 0 becomes the surface, for visualisation purposes
   dat3 <- dat3 %>%
     group_by(t,b) %>%
-    mutate(z_flip = max(z)-z) %>%
+    mutate(z_flip = max(z)-z) %>% # here is where we make 0 become the surface
     group_by(dest_b) %>%
     mutate(dest_k_flip = max(dest_k)-dest_k)
   
@@ -136,7 +137,7 @@ make_fluxplot <- function(source_b){
   # Produce a graphic output ------------------------------------------------
   
   p3 <- plot_grid(p2, p1, ncol = 1, nrow = 2, rel_heights = c(0.3,1))
-  save_plot(paste0('flux_plots_2017_HD_by_length/focal_box_', source_b, '.png'), p3, base_height = 20, base_width = 12)
+  save_plot(paste0(outdir, 'focal_box_', source_b, '.png'), p3, base_height = 20, base_width = 12)
   
 }
 

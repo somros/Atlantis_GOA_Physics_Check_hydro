@@ -14,13 +14,16 @@ lapply(.packages, require, character.only=TRUE)
 
 select <- dplyr::select
 
-temp.file <- paste0("../../outputs/complete_from_Emily/Script1/2017/monthly/forcings/temp/goa_temp_2017.nc")
-salt.file <- paste0("../../outputs/complete_from_Emily/Script1/2017/monthly/forcings/salt/goa_salt_2017.nc")
+# temp.file <- paste0("../../outputs/complete_from_Emily/Script1/2017/monthly/forcings/temp/goa_temp_2017.nc")
+# salt.file <- paste0("../../outputs/complete_from_Emily/Script1/2017/monthly/forcings/salt/goa_salt_2017.nc")
+temp.file <- paste0("../../../Atlantis_GOA_OY_MS/forcings/temp/goa_roms_temp_2075_2085.nc")
+salt.file <- paste0("../../../Atlantis_GOA_OY_MS/forcings/salt/goa_roms_salt_2075_2085.nc")
 bgm.file <- "../../data/atlantis/GOA_WGS84_V4_final.bgm" 
 cum.depth <- c(1,30,100,200,500,1000,3969)
 
 # make directory for plots
-dir.create('statevar_plots')
+outdir <- 'statevar_plots_2075_2084_climatology/'
+dir.create(outdir)
 
 # Atlantis model spatial domain
 atlantis_bgm <- bgm.file %>% read_bgm()
@@ -75,9 +78,9 @@ make_statevar_plot <- function(focal_box){
     filter(b == focal_box,
            z != 6) %>% # dropping the sediment
     group_by(t,b) %>%
-    mutate(z_flip = max(z)-z) %>%
+    mutate(z_flip = max(z)-z) %>% # here is where 0 goes from being bottom to be surface
     ungroup() %>%
-    mutate(t = as.POSIXct(t, origin = '2017-01-01', tz = 'UTC')) %>%
+    mutate(t = as.POSIXct(t, origin = '2075-01-01', tz = 'UTC')) %>%
     ggplot(aes(x = t, y = value, color = factor(z_flip)))+
     geom_line(size = 1.5)+
     scale_color_brewer(palette = 'Dark2')+
@@ -119,7 +122,7 @@ make_statevar_plot <- function(focal_box){
   # Produce a graphic output ------------------------------------------------
   
   p3 <- plot_grid(p2, p1, ncol = 1, nrow = 2, rel_heights = c(0.8, 1))
-  save_plot(paste0('statevar_plots/focal_box_', focal_box, '.png'), p3, base_height = 12, base_width = 18)
+  save_plot(paste0(outdir, focal_box, '.png'), p3, base_height = 12, base_width = 18)
   
 }
 
